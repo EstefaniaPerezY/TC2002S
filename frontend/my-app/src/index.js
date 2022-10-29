@@ -13,14 +13,7 @@ import Login from './Login'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
-  <Routes>
-    <Route path="/" element={<App />}> </Route>
-    <Route path="/users" element={<UserPage />}> </Route>
-    <Route path="/login" element={<Login />}> </Route>
-
-  </Routes>
-  </BrowserRouter>
+  <App></App>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -4,6 +4,12 @@ import models, schemas
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
 
+def delete_user(db: Session, user_id: int):
+    db_user = get_user(db, user_id)
+    db.delete(db_user)
+    db.commit()
+    return db_user
+
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 

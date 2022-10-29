@@ -1,6 +1,9 @@
 from typing import List, Union
 from datetime import datetime, timedelta
 
+
+from fastapi.responses import HTMLReponse
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -19,6 +22,17 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -95,7 +109,7 @@ async def read_users_me(current_user: schemas.User = Depends(get_current_active_
     return current_user
 
 @app.post("/users/", response_model=schemas.User)
-def create_user(user: schemas.UserCreate, tokens: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def create_user(user: schemas.UserCreate, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
